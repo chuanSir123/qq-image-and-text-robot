@@ -1,0 +1,54 @@
+Metadata-Version: 2.1
+Name: bing-translation-for-python
+Version: 3.1.0
+Summary: Bing translation for python
+Home-page: UNKNOWN
+Author: 87Keys
+Author-email: meme_me2019@outlook.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+Requires-Dist: tqdm
+Requires-Dist: bs4
+
+# Bing Translation For Python
+
+## 如何安装：
+
+    $ pip install bing-translation-for-python
+
+## 快速上手：
+[完整文档][1] Under construction
+### 示例：
+这个示例演示了如何将任意一种语言转换为英文
+#### `hello.py:`
+
+    from bing_translation_for_python import Translator
+    print(Translator('en').translator('你好'))
+#### 运行 `hello.py`
+    in  $ python ./hello.py
+    out $ hello.
+
+## 附加组件[终端翻译工具]
+这是一个在你的终端中的快速翻译小工具
+### 安装
+    $ pip install bing-terminal-translator
+### 项目地址
+[bing-termina-translator][2]
+
+[1]:https:......
+
+[2]:https://gitee.com/abchiyi/bing-termina-translator
+
+

@@ -1,0 +1,4 @@
+[creart.creators]
+commander=graia.ariadne.message.commander.creart:CommanderCreator
+commander_behaviour=graia.ariadne.message.commander.creart:CommanderBehaviourCreator
+

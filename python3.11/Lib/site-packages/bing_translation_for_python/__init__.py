@@ -1,0 +1,59 @@
+from . import core, setting
+from .public import errors
+
+
+class Translator:
+    """必应翻译"""
+
+    def __init__(self, to_lang: str, config: setting.Config = False):
+        # 设置token
+        self.refresh_token()
+        # 不带参数实例化的Config类,极慢的实例化时间
+        if not config:
+            config = setting.Config()
+        # 语言标签支持性检查
+        if to_lang not in config.tgt_lang:
+            raise errors.TargetLanguageNotSupported(F"不支持的语言:{to_lang}")
+
+        self.to_lang = to_lang
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # TODO 也许可以在这里设置打扫运行文件
+        pass
+
+    def __repr__(self):
+        return str(
+            F"<Translator({self.to_lang})>"
+        )
+
+    def refresh_token(self):
+        self.token = core.get_token()
+
+    @core.max_length_check
+    def translator(self,
+                   string_or_iterable,
+                   exclude_s: list = None,
+                   separator: str = ' '
+                   ) -> core.Text:
+        """翻译方法"""
+
+        def replace(string: str):
+            if not exclude_s:
+                return string
+            for exclude in exclude_s:
+                string = string.replace(exclude, ' ')
+            return string
+
+        if isinstance(string_or_iterable, str):
+            return core.Text(
+                self.to_lang, replace(string_or_iterable), self.token)
+        return core.Text(self.to_lang,
+                         separator.join(
+                             [replace(string).strip()
+                              for string in string_or_iterable]
+                         ),
+                         self.token
+                         )

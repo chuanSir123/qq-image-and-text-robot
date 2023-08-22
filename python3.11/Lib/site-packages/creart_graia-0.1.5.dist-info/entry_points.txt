@@ -1,0 +1,8 @@
+[creart.creators]
+broadcast=graia.creart.broadcast:BroadcastCreator
+broadcast_behaviour=graia.creart.broadcast:BroadcastBehaviourCreator
+loop=graia.creart.broadcast:EventLoopCreator
+saya=graia.creart.saya:SayaCreator
+scheduler=graia.creart.scheduler:SchedulerCreator
+scheduler_behaviour=graia.creart.scheduler:SchedulerBehaviourCreator
+

@@ -1,0 +1,45 @@
+import unittest
+from bing_translation_for_python import Translator, errors, core, setting
+
+
+class ErrorsTest(unittest.TestCase):
+
+    def test_file_notfound(self):
+        """配置文件读函数在找不到文件时抛出错误"""
+        try:
+            setting.Config.load('sr.ini', './')
+        except FileNotFoundError:
+            pass
+        else:
+            self.fail('Not captured:FileNotFoundError')
+
+    def test_not_support_error(self):
+        """在给出不受支持的目标语言代码时抛出错误"""
+        try:
+            Translator('abc')
+        except errors.TargetLanguageNotSupported:
+            pass
+        else:
+            self.fail(
+                'Not captured:TargetLanguageNotSupported with "Translator" obj'
+            )
+
+    def test_empty_text_error(self):
+        """在没有给出文本时的错误"""
+        try:
+            # 确保字符串仅包含空格时也作为空处理
+            Translator('en').translator('  ')
+        except errors.EmptyTextError:
+            pass
+        else:
+            self.fail('Not captured:EmptyTextError')
+
+    def test_length_over(self):
+        """文本超500"""
+        for item in ['啊  是'*126, ['啊  是'*126]*126]:
+            try:
+                Translator('en').translator(item)
+            except errors.MaxLengthOver:
+                pass
+            else:
+                self.fail('Not captured:MaxLengthOver With Translator')

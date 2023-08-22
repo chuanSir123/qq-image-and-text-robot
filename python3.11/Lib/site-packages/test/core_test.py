@@ -1,0 +1,148 @@
+import unittest
+import time
+
+from faker import Faker
+
+from bing_translation_for_python import Translator, setting
+from bing_translation_for_python.core import Text, SemanticItem
+from bing_translation_for_python import core
+
+
+class TranslateTest(unittest.TestCase):
+    def setUp(self):
+        self.default_language = 'en'
+        self.faker = Faker(locale='zh_CN')
+        self.tra = Translator(self.default_language)
+
+        # texts
+        self.text = '你好'
+        self.some_text = [self.faker.color_name() for i in range(5)]
+
+    def tearDown(self):
+        pass
+
+    def test_translator_with(self):
+        tolang = 'zh-Hans'
+        with Translator(tolang) as translator:
+            for text in [self.faker.color_name() for i in range(2)]:
+                self.assertTrue(
+                    isinstance(translator.translator(text).text(), str)
+                )
+                time.sleep(0.5)
+
+    def test_split_string(self):
+        """
+        字符串包含翻译引擎无法识别的字符时,指定分割符,
+        以及确保对象方法的参数有效
+        """
+
+        # 分割参数接受字符串
+        t_text = self.tra.translator(
+            '_'.join(self.some_text),
+            exclude_s='_'
+        )
+
+        self.assertEqual(
+            t_text.text(),
+            ' '.join(self.some_text),
+            '功能：分割参数接受字符功能被破坏'
+        )
+
+        # 分割参数接受一个序列
+        t_text = self.tra.translator(
+            '><'.join(self.some_text),
+            exclude_s=('>', '<')
+        )
+
+        self.assertEqual(
+            t_text.text(),
+            ' '.join(self.some_text),
+            '功能：分割参数接受序列功能被破坏'
+        )
+
+    def test_translator_return_is_text_obj(self):
+        obj = self.tra.translator(self.text)
+        self.assertTrue(
+            isinstance(obj, Text),
+            type(obj)
+        )
+
+    def test_translator_get_iterable_obj(self):
+
+        try:
+            data = [self.faker.color_name() for i in range(2)]
+            Translator(self.default_language).translator(data, separator='\n')
+        except AssertionError as error:
+            self.fail(error)
+
+
+class SemanticTest(unittest.TestCase):
+
+    def setUp(self):
+        # semantic 接收Text对象
+        token = core.get_token()
+        self.semantic = core.Semantic(
+            core.Text('en', '你好', token),
+            token
+        )
+
+    def test_json_method(self):
+        """Semantic对象包含json方法"""
+        data = self.semantic.json()
+
+        self.assertTrue(isinstance(data, dict), type(data))
+
+        if ('to' not in data) and ('from' not in data):
+            self.fail('json方法返回字典必要的条目')
+
+        self.assertEqual(type(data['semantic']), dict, data)
+
+    def test_text_method(self):
+        """Semantic对象包含text方法"""
+        data = self.semantic.json()['semantic']
+        text = self.semantic.text()
+
+        for key in data:
+            if key not in text:
+                self.fail(F'{key}未包含')
+
+        self.assertTrue(isinstance(text, str), type(text))
+
+    def test_is_iterative(self):
+        """Semantic对象是可迭代的"""
+        for i in self.semantic:
+            isinstance(i, SemanticItem)
+
+    def test_attr(self):
+        """Semantici必须包含的属性"""
+        try:
+            print(self.semantic.from_lang)
+            print(self.semantic.to_lang)
+        except AttributeError as error:
+            self.fail(F'{error}需要包含的属性')
+
+    def test_smeantic_have_len(self):
+        try:
+            len(self.semantic)
+        except TypeError:
+            self.fail('semantic 没有__len__方法')
+
+
+class TextTest(unittest.TestCase):
+    def setUp(self):
+        self.token = core.get_token()
+
+    def test_text(self):
+        """测试text方法是否有效"""
+        try:
+            Text('en', '你好', self.token).text()
+        except AssertionError as error:
+            self.fail(error)
+
+    def test_json(self):
+        """测试json方法是否有效"""
+
+        try:
+            Text('en', '你好', self.token).json()
+        except Exception as error:
+            self.fail(error)

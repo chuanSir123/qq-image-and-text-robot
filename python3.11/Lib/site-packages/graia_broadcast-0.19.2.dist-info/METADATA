@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: graia-broadcast
+Version: 0.19.2
+Summary: a highly customizable, elegantly designed event system based on asyncio
+License: MIT
+Author-email: GreyElaina <GreyElaina@outlook.com>
+Requires-Python: >=3.7,<4.0
+Requires-Dist: typing-extensions>=3.10.0; python_version < "3.9"

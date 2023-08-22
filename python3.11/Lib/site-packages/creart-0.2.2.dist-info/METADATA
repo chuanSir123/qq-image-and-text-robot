@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: creart
+Version: 0.2.2
+Summary: a universal, extensible class instantiation helper
+License: MIT
+Author-email: GreyElaina <GreyElaina@outlook.com>
+Requires-Python: >=3.8
+Requires-Dist: importlib-metadata>=3.6
+Description-Content-Type: text/markdown
+
+# creart
+
+a universal, extensible class instantiation helper
+
